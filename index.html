@@ -25,7 +25,7 @@
             chatbox.innerHTML += `<p class='user'><b>You:</b> ${userInput}</p>`;
             document.getElementById("userInput").value = "";
 
-            const res = await fetch("https://your-space-name.hf.space/api/predict", {
+            const res = await fetch("https://huggingface.co/spaces/Mycophyte/deepseek-ai-DeepSeek-R1-Distill-Llama-8B", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ data: [userInput] })
