@@ -1,72 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Personal Portfolio</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepSeek Chat</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
+        #chatbox { width: 50%; margin: auto; text-align: left; border: 1px solid #ccc; padding: 10px; }
+        .user { color: blue; }
+        .bot { color: green; }
+    </style>
 </head>
-
 <body>
-  <header>
-    <nav>
-      <ul>
-        <li><a href="#home">Home</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#portfolio">Portfolio</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-    </nav>
-  </header>
+    <h2>Chat with DeepSeek</h2>
+    <div id="chatbox"></div>
+    <input id="userInput" type="text" placeholder="Type a message...">
+    <button onclick="sendMessage()">Send</button>
 
-  <section id="home">
-    <h1>Welcome to My Portfolio</h1>
-    <p>Hi, I'm [Your Name], a passionate [Your Profession].</p>
-  </section>
+    <script>
+        async function sendMessage() {
+            const userInput = document.getElementById("userInput").value;
+            const chatbox = document.getElementById("chatbox");
 
-  <section id="about">
-    <h2>About Me</h2>
-    <p>A brief introduction about yourself, your skills, and your experience.</p>
-  </section>
+            chatbox.innerHTML += `<p class='user'><b>You:</b> ${userInput}</p>`;
+            document.getElementById("userInput").value = "";
 
-  <section id="portfolio">
-    <h2>My Work</h2>
-    <div class="portfolio-items">
-      <div class="portfolio-item">
-        <img src="project1.jpg" alt="Project 1">
-        <p>Project 1 description</p>
-      </div>
-      <div class="portfolio-item">
-        <img src="project2.jpg" alt="Project 2">
-        <p>Project 2 description</p>
-      </div>
-    </div>
-  </section>
+            const res = await fetch("https://your-space-name.hf.space/api/predict", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ data: [userInput] })
+            });
 
-  <section id="contact">
-    <h2>Contact Me</h2>
-    <form action="#" method="post">
-      <label for="name">Name:</label>
-      <input type="text" id="name" name="name" required>
-
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" required>
-
-      <label for="message">Message:</label>
-      <textarea id="message" name="message" required></textarea>
-
-      <button type="submit">Send</button>
-    </form>
-  </section>
-
-  <footer>
-    <p>&copy; 2025 [Your Name]. All rights reserved.</p>
-  </footer>
-
-  <script src="script.js">
-    //back to top button
-   </script>
+            const data = await res.json();
+            chatbox.innerHTML += `<p class='bot'><b>Bot:</b> ${data.data[0]}</p>`;
+        }
+    </script>
 </body>
-
 </html>
