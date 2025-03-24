@@ -3,37 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DeepSeek Chat</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
-        #chatbox { width: 50%; margin: auto; text-align: left; border: 1px solid #ccc; padding: 10px; }
-        .user { color: blue; }
-        .bot { color: green; }
-    </style>
-</head>
-<body>
-    <h2>Chat with DeepSeek</h2>
-    <div id="chatbox"></div>
-    <input id="userInput" type="text" placeholder="Type a message...">
-    <button onclick="sendMessage()">Send</button>
-
+    <title>DeepSeek Chatbot</title>
     <script>
         async function sendMessage() {
             const userInput = document.getElementById("userInput").value;
-            const chatbox = document.getElementById("chatbox");
+            const responseDiv = document.getElementById("response");
 
-            chatbox.innerHTML += `<p class='user'><b>You:</b> ${userInput}</p>`;
+            responseDiv.innerHTML += `<p class='user'><b>You:</b> ${userInput}</p>`;
             document.getElementById("userInput").value = "";
 
-            const res = await fetch("https://huggingface.co/spaces/Mycophyte/deepseek-ai-DeepSeek-R1-Distill-Llama-8B", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ data: [userInput] })
-            });
+            try {
+                const res = await fetch("https://your-space-name.hf.space/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ text: userInput })
+                });
 
-            const data = await res.json();
-            chatbox.innerHTML += `<p class='bot'><b>Bot:</b> ${data.data[0]}</p>`;
+                const data = await res.json();
+                responseDiv.innerHTML += `<p class='bot'><b>Bot:</b> ${data.response}</p>`;
+            } catch (error) {
+                responseDiv.innerHTML += `<p class='bot error'><b>Error:</b> Failed to connect to API.</p>`;
+                console.error("API request failed:", error);
+            }
         }
     </script>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; }
+        input { width: 80%; padding: 10px; margin-right: 10px; }
+        button { padding: 10px; }
+        #response { margin-top: 20px; }
+        .user { color: blue; }
+        .bot { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h2>DeepSeek Chatbot</h2>
+    <input type="text" id="userInput" placeholder="Type a message..." />
+    <button onclick="sendMessage()">Send</button>
+    <div id="response"></div>
 </body>
 </html>
